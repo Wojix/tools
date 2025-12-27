@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>github link 2 cdn links</title>
+
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+        background: #ffffff;
+      }
+
+      input,
+      button {
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+
+      input {
+        width: 70%;
+      }
+
+      button {
+        margin-left: 0.5rem;
+      }
+
+      ul {
+        margin-top: 1rem;
+        padding-left: 1.5rem;
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+        word-break: break-all;
+      }
+
+      a {
+        color: #000000;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .copy {
+        margin-left: 0.5rem;
+        padding: 0.2rem 0.5rem;
+        font-size: 0.8rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>githubのファイルリンク(normal / raw) をcdnのリンクに変換します。</h1>
+
+    <input
+      type="text"
+      id="githubUrl"
+      placeholder="GitHub ファイルの URL を貼る"
+    />
+    <button id="generate">生成</button>
+
+    <ul id="result"></ul>
+
+    <h2>対応cdn</h2>
+    <ul>
+      <li>jsDelivr</li>
+      <li>unplg</li>
+      <li>githack</li>
+      <li>gitfast</li>
+      <li>cdnjs(cloudflare)</li>
+    </ul>
+
+    <script src="script.js"></script>
+  </body>
+</html>
