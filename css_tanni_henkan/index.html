@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>CSS単位変換</title>
+
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+        background: #f5f5f5;
+        color: #000000;
+      }
+
+      h1 {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.8rem;
+        color: #aaa;
+        margin-top: 0.2rem;
+        margin-bottom: 1rem;
+      }
+
+      input,
+      select {
+        padding: 0.5rem;
+        font-size: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .group {
+        margin-bottom: 1rem;
+      }
+
+      .result {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: #efefef;
+        color: #000;
+        font-size: 1.2rem;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>CSS単位変換</h1>
+
+    <div class="group">
+      <input
+        type="number"
+        id="value"
+        placeholder="変換したい数値を書く（例: 24, 1.5, 50）"
+      />
+    </div>
+
+    <div class="group">
+      <select id="from">
+        <option>px</option>
+        <option>vw</option>
+        <option>vh</option>
+        <option>vmin</option>
+        <option>vmax</option>
+        <option>rem</option>
+        <option>em</option>
+        <option>%</option>
+      </select>
+      <label>元の単位</label>
+    </div>
+
+    <div class="group">
+      <select id="to">
+        <option>px</option>
+        <option>vw</option>
+        <option>vh</option>
+        <option>vmin</option>
+        <option>vmax</option>
+        <option>rem</option>
+        <option>em</option>
+        <option>%</option>
+      </select>
+      <label>変換後の単位</label>
+    </div>
+
+    <div class="group">
+      <input
+        type="number"
+        id="width"
+        value="1920"
+      />
+      <label>画面幅(px)</label>
+    </div>
+
+    <div class="group">
+      <input
+        type="number"
+        id="height"
+        value="1080"
+      />
+      <label>画面高さ(px)</label>
+    </div>
+
+    <div class="group">
+      <input
+        type="number"
+        id="root"
+        value="16"
+      />
+      <label>root font-size(px)｜html の font-size（通常16）</label>
+    </div>
+
+    <div class="group">
+      <input
+        type="number"
+        id="parent"
+        value="16"
+      />
+      <label>親 font-size(px)｜em・% の基準（親要素の font-size）</label>
+    </div>
+
+    <div
+      id="result"
+      class="result"
+    >
+      —
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
