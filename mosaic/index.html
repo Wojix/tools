@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>モザイク文字ジェネレーター</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background: #ffffff;
+    }
+
+    input,
+    button {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+
+    input {
+      width: 60%;
+    }
+
+    button {
+      margin-left: 0.5rem;
+    }
+
+    #result {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      word-break: break-all;
+      font-family: monospace;
+    }
+
+    .copy {
+      margin-left: 0.5rem;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>モザイク文字ジェネレーター</h1>
+
+  <input type="number" id="length" placeholder="文字数を入力" min="1" />
+  <button id="generate">生成</button>
+  <button id="copy" class="copy">コピー</button>
+
+  <div id="result"></div>
+
+  <h2>使い方</h2>
+  <p>最近よく見る、「こんにちは。今回は、\＄*%％^*_\$.@!+をしたいと思います！」の様に、何を言っているかよくわからないときに使えます。</p>
+
+  <script src="script.js"></script>
+</body>
+</html>
