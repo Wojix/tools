@@ -8,4 +8,4 @@
 <br>
 [Css単位変換](https://wojix.github.io/tools/csshenkan/)
 <br>
-[モザイク文字ジェネレーター](https://wojix.github.io/tools/mozaic/)
+[モザイク文字ジェネレーター](https://wojix.github.io/tools/mosaic/)
