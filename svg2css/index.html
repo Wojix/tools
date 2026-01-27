@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG to CSS</title>
+    <style>
+        body { background: #fff; color: #000; font-family: monospace; padding: 20px; }
+        textarea { width: 100%; height: 100px; background: #fff; color: #000; border: 1px solid #ccc; }
+        #drop-area { border: 1px dashed #ccc; padding: 20px; text-align: center; margin: 10px 0; cursor: pointer; color: #666; }
+        pre { background: #f9f9f9; padding: 15px; color: #000; position: relative; border: 1px solid #eee; }
+        button { position: absolute; top: 5px; right: 5px; background: #fff; color: #000; border: 1px solid #ccc; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <textarea id="svg-input" placeholder="Paste SVG..."></textarea>
+    <div id="drop-area">Drop SVG</div>
+    <input type="file" id="file-input" style="display:none">
+    <pre id="output"><button id="copy-btn">COPY</button><code>/* CSS Output */</code></pre>
+
+    <script>
+        const svgInput = document.getElementById('svg-input');
+        const output = document.querySelector('#output code');
+        const copyBtn = document.getElementById('copy-btn');
+        const fileInput = document.getElementById('file-input');
+        const dropArea = document.getElementById('drop-area');
+
+        svgInput.addEventListener('input', e => process(e.target.value));
+        dropArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', e => read(e.target.files[0]));
+        copyBtn.addEventListener('click', () => navigator.clipboard.writeText(output.textContent));
+
+        dropArea.addEventListener('dragover', e => e.preventDefault());
+        dropArea.addEventListener('drop', e => { e.preventDefault(); read(e.dataTransfer.files[0]); });
+
+        function read(file) {
+            if (!file) return;
+            const r = new FileReader();
+            r.onload = e => { svgInput.value = e.target.result; process(e.target.result); };
+            r.readAsText(file);
+        }
+
+        function process(txt) {
+            const svg = new DOMParser().parseFromString(txt, "image/svg+xml").querySelector('svg');
+            if (!svg) return;
+            const vb = svg.getAttribute('viewBox')?.split(/\s+|,/).map(Number) || [0, 0, 100, 100];
+            const w = vb[2], h = vb[3], ox = vb[0], oy = vb[1];
+            let shapes = [], colors = [];
+            svg.querySelectorAll('path').forEach(p => {
+                const d = p.getAttribute('d'), f = p.getAttribute('fill') || p.style.fill || '#000';
+                if (f === 'none') return;
+                const res = convert(d, w, h, ox, oy);
+                if (res) { shapes.push(`shape(${res})`); colors.push(f); }
+            });
+            output.textContent = `.shape {\n aspect-ratio: ${(w/h).toFixed(3)};\n background: ${colors.join(', ')};\n clip-path: ${shapes.join(', ')};\n}`;
+        }
+
+        function convert(d, w, h, ox, oy) {
+            const cmds = d.match(/[a-zA-Z][^a-zA-Z]*/g);
+            if (!cmds) return null;
+            const p = (v, m, o) => ((v - o) / m * 100).toFixed(2) + '%';
+            return cmds.map((c, i) => {
+                const t = c[0], a = c.slice(1).trim().split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
+                const s = i === 0 ? "from " : ", ";
+                if (t === 'M') return `${s}${p(a[0], w, ox)} ${p(a[1], h, oy)}`;
+                if (t === 'L') return `${s}line to ${p(a[0], w, ox)} ${p(a[1], h, oy)}`;
+                if (t === 'C') return `${s}curve to ${p(a[4], w, ox)} ${p(a[5], h, oy)} with ${p(a[0], w, ox)} ${p(a[1], h, oy)} / ${p(a[2], w, ox)} ${p(a[3], h, oy)}`;
+                if (t === 'Q') return `${s}curve to ${p(a[2], w, ox)} ${p(a[3], h, oy)} with ${p(a[0], w, ox)} ${p(a[1], h, oy)}`;
+                if (t.toUpperCase() === 'Z') return `, close`;
+                return "";
+            }).join("");
+        }
+    </script>
+</body>
+</html>
