@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS Shape Previewer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            font-family: sans-serif;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-family: monospace;
+        }
+        #preview-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+        #target {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+    <textarea id="cssInput" placeholder="ここにCSSを入力してください..."></textarea>
+    
+    <div id="preview-container">
+        <div id="target"></div>
+    </div>
+
+    <style id="dynamicStyles"></style>
+
+    <script>
+        const cssInput = document.getElementById('cssInput');
+        const dynamicStyles = document.getElementById('dynamicStyles');
+        const target = document.getElementById('target');
+
+        cssInput.addEventListener('input', () => {
+            const cssText = cssInput.value;
+            dynamicStyles.textContent = cssText;
+
+            const classMatch = cssText.match(/\.([a-zA-Z0-9_-]+)/);
+            if (classMatch && classMatch[1]) {
+                target.className = classMatch[1];
+            } else {
+                target.className = '';
+            }
+        });
+    </script>
+</body>
+</html>
