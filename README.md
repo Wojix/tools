@@ -13,3 +13,5 @@
 [svgをcssに変換](https://wojix.github.io/tools/svg2css/)
 <br>
 [cssプレビュー](https://wojix.github.io/tools/csspreview/)
+<br>
+[虹色文字ジェネレーター](https://wojix.github.io/tools/rainbow/)
