@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Rainbow Text Generator</title>
+    <style>
+        body { background: #fff; color: #000; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
+        #canvasContainer { 
+            margin-bottom: 20px; 
+            padding: 10px; 
+            display: inline-block; 
+            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), 
+                              linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            border: 1px solid #ccc;
+        }
+        canvas { max-width: 100%; height: auto; display: block; }
+        .controls { display: grid; gap: 12px; justify-content: center; }
+        .item { font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: center; }
+        button { padding: 8px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="canvasContainer">
+        <canvas id="textCanvas"></canvas>
+    </div>
+    
+    <div class="controls">
+        <input type="text" id="textInput" value="ボーナス確定" style="width:280px; padding:8px;">
+        
+        <div class="item">
+            フォント: <input type="file" id="fontInput" accept=".ttf,.otf,.woff">
+        </div>
+
+        <div class="item">
+            向き: <select id="dir"><option value="h">横</option><option value="v">縦</option></select>
+            回数: <input type="range" id="rep" min="1" max="10" value="1"> <span id="rv">1</span>
+        </div>
+
+        <div class="item">
+            <label><input type="checkbox" id="tr" checked> 透過</label>
+            <input type="color" id="cp" value="#ffffff" style="display:none">
+        </div>
+        
+        <button id="dl">画像を保存</button>
+    </div>
+
+    <script>
+        const cvs = document.getElementById('textCanvas');
+        const ctx = cvs.getContext('2d');
+        const input = document.getElementById('textInput');
+        const tr = document.getElementById('tr');
+        const cp = document.getElementById('cp');
+        const dir = document.getElementById('dir');
+        const rep = document.getElementById('rep');
+        const rv = document.getElementById('rv');
+        const fIn = document.getElementById('fontInput');
+        let fName = '900 100px sans-serif';
+
+        function draw() {
+            const txt = input.value || ' ';
+            const n = parseInt(rep.value);
+            rv.textContent = n;
+
+            ctx.font = fName;
+            const m = ctx.measureText(txt);
+            cvs.width = m.width + 40;
+            cvs.height = 140;
+
+            if (tr.checked) {
+                ctx.clearRect(0, 0, cvs.width, cvs.height);
+                cp.style.display = 'none';
+            } else {
+                ctx.fillStyle = cp.value;
+                ctx.fillRect(0, 0, cvs.width, cvs.height);
+                cp.style.display = 'inline-block';
+            }
+
+            const g = dir.value === 'h' ? ctx.createLinearGradient(0, 0, cvs.width, 0) : ctx.createLinearGradient(0, 20, 0, 120);
+            const clrs = ["#f00","#ff0","#0f0","#0ff","#00f","#f0f"];
+            for (let i = 0; i < n; i++) {
+                clrs.forEach((c, j) => g.addColorStop(Math.min((i/n)+(j/clrs.length/n), 1), c));
+            }
+            g.addColorStop(1, "#f00");
+
+            ctx.font = fName;
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            ctx.fillStyle = g;
+            ctx.fillText(txt, cvs.width/2, cvs.height/2);
+        }
+
+        fIn.onchange = (e) => {
+            const f = e.target.files[0];
+            if (!f) return;
+            const r = new FileReader();
+            r.onload = (ev) => {
+                new FontFace('c', ev.target.result).load().then((l) => {
+                    document.fonts.add(l);
+                    fName = '900 100px c';
+                    draw();
+                });
+            };
+            r.readAsArrayBuffer(f);
+        };
+
+        [input, tr, cp, dir, rep].forEach(el => el.oninput = draw);
+        window.onload = draw;
+        document.getElementById('dl').onclick = () => {
+            const a = document.createElement('a');
+            a.download = 'rainbow.png';
+            a.href = cvs.toDataURL();
+            a.click();
+        };
+    </script>
+</body>
+</html>
